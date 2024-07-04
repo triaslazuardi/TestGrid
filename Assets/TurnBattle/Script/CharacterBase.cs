@@ -13,7 +13,7 @@ namespace TurnBaseTest.Character {
 
         public void CharacterIdle()
         {
-            ResetAllAnimatorTriggers();
+            //ResetAllAnimatorTriggers();
             animCharacter.SetTrigger("idle");
         }
         public void CharacterRun()
@@ -22,6 +22,7 @@ namespace TurnBaseTest.Character {
         }
         public void CharacterDie()
         {
+            //ResetAllAnimatorTriggers();
             animCharacter.SetTrigger("die");
         }
 
@@ -32,7 +33,7 @@ namespace TurnBaseTest.Character {
         }
         private void CharacterAttackType2()
         {
-            ResetAllAnimatorTriggers();
+            //ResetAllAnimatorTriggers();
             animCharacter.SetTrigger("attack_2");
         }
 
