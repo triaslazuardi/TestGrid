@@ -34,6 +34,8 @@ namespace TurnBaseTest {
         [Range(0, 2)]
         public int currenIdxEnemy = 0;
 
+        bool isProgress = false;
+
         private void Awake()
         {
             instance = this;
@@ -42,6 +44,9 @@ namespace TurnBaseTest {
         }
 
         public void OnPlay() {
+            if (isProgress) return;
+            isProgress = true;
+
             if (scrUi.toggleServer.isOn)
             {
                 StartCoroutine(playGameWaitServer());
@@ -53,6 +58,9 @@ namespace TurnBaseTest {
 
         public void OnPlayAgain()
         {
+            if (isProgress) return;
+            isProgress = true;
+
             LeanPool.Despawn(charPlayerHandle);
             LeanPool.Despawn(charEnemyHandle);
 
@@ -74,6 +82,7 @@ namespace TurnBaseTest {
             state = StateAttack.WaitingPlayer;
             scrUi.SetDefault();
             SoundManager.GetInstance().PlaySFX("play");
+            isProgress = false;
         }
 
         public IEnumerator playGameWaitServer()
@@ -100,6 +109,7 @@ namespace TurnBaseTest {
                     state = StateAttack.WaitingPlayer;
                     scrUi.SetDefault();
                     SoundManager.GetInstance().PlaySFX("play");
+                    isProgress = false;
                 }
             }  
         }
