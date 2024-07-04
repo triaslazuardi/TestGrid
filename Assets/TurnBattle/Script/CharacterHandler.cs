@@ -85,9 +85,11 @@ namespace TurnBaseTest.Character {
                 state = StateSliding.Progress;
                 Vector3 attactDir = (targetChar.GetPosition() - GetPosition().normalized);
                 baseCharacter.CHaracterAttact(attactDir,() => {
-                    var fxItem = LeanPool.Spawn(BattleHandler.GetInstance().dtGame.fxBlood, targetChar.transform.position, Quaternion.identity);
+                    var fxItem = LeanPool.Spawn(BattleHandler.GetInstance().dtGame.fxBlood, targetChar.transform);
+                    fxItem.transform.localPosition = BattleHandler.GetInstance().dtGame.vecFx;
                     fxItem.RunFx();
                     targetChar.healthCharacter.GetDamage(BattleHandler.GetInstance().dtGame.GetRandomeDamage());
+                    SoundManager.GetInstance().PlaySFX("attack");
                 }, () =>
                 {
                     SlideToPosition(startingPosition, () =>

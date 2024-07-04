@@ -891,7 +891,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animCharacter: {fileID: 95000013029897698}
-  durationAttact: 0
+  durationAttact: 0.4
 --- !u!114 &2697663653408712133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -909,7 +909,6 @@ MonoBehaviour:
   transformCharacter: {fileID: 4000013739681562}
   transformSign: {fileID: 1883097275864121876}
   IsPlayer: 0
-  IsDead: 0
 --- !u!1 &1000012079282026
 GameObject:
   m_ObjectHideFlags: 0

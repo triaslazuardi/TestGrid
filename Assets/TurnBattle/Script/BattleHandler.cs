@@ -5,6 +5,7 @@ using TurnBaseTest.Enum;
 using TurnBaseTest.So;
 using TurnBaseTest.Character;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace TurnBaseTest {
     public class BattleHandler : MonoBehaviour
@@ -25,6 +26,8 @@ namespace TurnBaseTest {
         private CharacterHandler activeCharHandle;
         public StateAttack state;
 
+        private string apiServer = "https://6686f9fe83c983911b043c72.mockapi.io/GetRandom/getRandom";
+
         [Range(0, 2)]
         public int currenIdxPlayer = 0;
 
@@ -41,13 +44,10 @@ namespace TurnBaseTest {
         public void OnPlay() {
             if (scrUi.toggleServer.isOn)
             {
+                StartCoroutine(playGameWaitServer());
             }
             else {
-                charPlayerHandle = SpawnCharacter(true);
-                charEnemyHandle = SpawnCharacter(false);
-                SetActiveChar(charPlayerHandle);
-                state = StateAttack.WaitingPlayer;
-                scrUi.SetDefault();
+                playGame();
             }
         }
 
@@ -58,16 +58,50 @@ namespace TurnBaseTest {
 
             if (scrUi.toggleServer.isOn)
             {
-
+                StartCoroutine(playGameWaitServer());
             }
             else {
-                charPlayerHandle = SpawnCharacter(true);
-                charEnemyHandle = SpawnCharacter(false);
-                SetActiveChar(charPlayerHandle);
-                state = StateAttack.WaitingPlayer;
-                scrUi.SetDefault();
+                playGame();
             }
-            
+        }
+
+        public void playGame() {
+            currenIdxPlayer = 0;
+            currenIdxEnemy = 0;
+            charPlayerHandle = SpawnCharacter(true);
+            charEnemyHandle = SpawnCharacter(false);
+            SetActiveChar(charPlayerHandle);
+            state = StateAttack.WaitingPlayer;
+            scrUi.SetDefault();
+            SoundManager.GetInstance().PlaySFX("play");
+        }
+
+        public IEnumerator playGameWaitServer()
+        {
+            scrUi.OperateBlock(true);
+            using (UnityWebRequest webRequest = UnityWebRequest.Get(apiServer)) {
+                yield return webRequest.SendWebRequest();
+
+                if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
+                    webRequest.result == UnityWebRequest.Result.ProtocolError)
+                {
+                    Debug.LogError("[Server] Error: " + webRequest.error);
+                    playGame();
+                    scrUi.toggleServer.isOn = false;
+                }
+                else
+                {
+                    currenIdxPlayer = UnityEngine.Random.Range(0, prefabCharPlayer.Count);
+                    currenIdxEnemy = UnityEngine.Random.Range(0, prefabCharEnemy.Count);
+                    Debug.Log($"[Server] success: {currenIdxPlayer}, enemy {currenIdxEnemy}");
+                    charPlayerHandle = SpawnCharacter(true);
+                    charEnemyHandle = SpawnCharacter(false);
+                    SetActiveChar(charPlayerHandle);
+                    state = StateAttack.WaitingPlayer;
+                    scrUi.SetDefault();
+                    SoundManager.GetInstance().PlaySFX("play");
+                }
+            }  
         }
 
         private void Update()
@@ -109,9 +143,12 @@ namespace TurnBaseTest {
 
         private void ChooseNextChar()
         {
+            if (state == StateAttack.Done) return;
+
             if (BattleOver())
             {
                 state = StateAttack.Done;
+                SoundManager.GetInstance().PlaySFX("end");
                 return;
             }
 

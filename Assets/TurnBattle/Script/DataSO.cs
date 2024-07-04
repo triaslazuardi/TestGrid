@@ -13,6 +13,7 @@ namespace TurnBaseTest.So {
         public int slideSpeed = 0;
         public float reachedDistance = 0;
         public float rangeDistance = 0;
+        public Vector3 vecFx;
 
         [SerializeField] private List<int> damageVal;
         [SerializeField] private bool isPlayerAlwaysWin;

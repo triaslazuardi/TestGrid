@@ -17,6 +17,7 @@ MonoBehaviour:
   slideSpeed: 10
   reachedDistance: 0.1
   rangeDistance: 7
+  vecFx: {x: -7, y: -3, z: 0}
   damageVal: 280000001e00000014000000
   isPlayerAlwaysWin: 0
   delay1: 0.125
